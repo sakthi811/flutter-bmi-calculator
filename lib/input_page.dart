@@ -1,9 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'bmi_card.dart';
+import 'bmi_card_content.dart';
+import 'bmi_row_widget.dart';
 
 const bottomContainerHeight = 80.0;
-const bmiCardColor = Color(0xff1d1e33);
-const bmiButtonColour = Color(0xffeb1555);
+const activeCardColor = Color(0xff1d1e33);
+const inactiveCardColor = Color(0xff111328);
+const bmiButtonColor = Color(0xffeb1555);
+
+enum Gender { male, female }
 
 class InputPage extends StatefulWidget {
   const InputPage({super.key});
@@ -13,6 +21,9 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
+  Color maleCardColor = inactiveCardColor;
+  Color femaleCardColor = inactiveCardColor;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,50 +32,77 @@ class _InputPageState extends State<InputPage> {
         ),
         body: Column(
           children: <Widget>[
-            BMIRowWidget(),
-            Expanded(child: BMICard(colour: bmiCardColor)),
-            BMIRowWidget(),
+            BMIRowWidget(
+              maleCardColour: maleCardColor,
+              femaleCardColour: femaleCardColor,
+              maleCardWidget: BMICardContent(
+                iconData: FontAwesomeIcons.mars,
+                iconLabel: 'MALE',
+              ),
+              femaleCardWidget: BMICardContent(
+                iconData: FontAwesomeIcons.venus,
+                iconLabel: 'FEMALE',
+              ),
+              onMaleCardPressed: () {
+                setState(() {
+                  updateColour(Gender.male);
+                });
+              },
+              onFemaleCardPressed: () {
+                setState(() {
+                  updateColour(Gender.female);
+                });
+              },
+            ),
+            Expanded(
+                child: GestureDetector(
+              onTap: () {
+                print('Center widget was pressed');
+              },
+              child: BMICard(
+                colour: activeCardColor,
+                cardChild: BMICardContent(
+                  iconData: FontAwesomeIcons.mars,
+                  iconLabel: 'MALE',
+                ),
+              ),
+            )),
+            BMIRowWidget(
+              maleCardColour: inactiveCardColor,
+              femaleCardColour: inactiveCardColor,
+              maleCardWidget: BMICardContent(
+                iconData: FontAwesomeIcons.mars,
+                iconLabel: 'MALE',
+              ),
+              femaleCardWidget: BMICardContent(
+                iconData: FontAwesomeIcons.mars,
+                iconLabel: 'FEMALE',
+              ),
+              onMaleCardPressed: () {},
+              onFemaleCardPressed: () {},
+            ),
             Container(
-                color: bmiButtonColour,
+                color: bmiButtonColor,
                 margin: const EdgeInsets.only(top: 10.0),
                 width: double.infinity,
                 height: bottomContainerHeight)
           ],
         ));
   }
-}
 
-class BMIRowWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: BMICard(colour: bmiCardColor),
-          ),
-          Expanded(
-            child: BMICard(colour: bmiCardColor),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class BMICard extends StatelessWidget {
-  BMICard({required this.colour});
-
-  Color colour;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(15.0),
-      decoration: BoxDecoration(
-        color: colour,
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-    );
+  void updateColour(Gender gender) {
+    if (gender == Gender.male) {
+      if (maleCardColor == inactiveCardColor) {
+        maleCardColor = activeCardColor;
+      } else {
+        maleCardColor == inactiveCardColor;
+      }
+    } else if (gender == Gender.female) {
+      if (femaleCardColor == inactiveCardColor) {
+        femaleCardColor = activeCardColor;
+      } else {
+        femaleCardColor == inactiveCardColor;
+      }
+    }
   }
 }
