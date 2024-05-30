@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bmi_calc/round_icon_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'bmi_card.dart';
-import 'bmi_card_content.dart';
-import 'bmi_row_widget.dart';
+import 'bmi_param_widget_content.dart';
+import 'gender_card_content.dart';
+import 'gender_row_widget.dart';
 import 'constants.dart';
 
 enum Gender { male, female }
@@ -19,6 +21,9 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   Gender selectedGender = Gender.male;
   int height = 180;
+  int weight = 60;
+  int age = 20;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +33,7 @@ class _InputPageState extends State<InputPage> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            BMIRowWidget(
+            GenderRowWidget(
               maleCardColour: selectedGender == Gender.male
                   ? kActiveCardColor
                   : kInactiveCardColor,
@@ -68,7 +73,7 @@ class _InputPageState extends State<InputPage> {
                     children: <Widget>[
                       Text(
                         height.toString(),
-                        style: kHeightLabelTextStyle,
+                        style: kBmiUnitLabelTextStyle,
                       ),
                       Text(
                         'cm',
@@ -100,19 +105,39 @@ class _InputPageState extends State<InputPage> {
                 ],
               ),
             )),
-            BMIRowWidget(
-              maleCardColour: kInactiveCardColor,
-              femaleCardColour: kInactiveCardColor,
-              maleCardWidget: GenderCardContent(
-                iconData: FontAwesomeIcons.mars,
-                iconLabel: 'MALE',
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  BMIParamWidgetContent(
+                    label: 'WEIGHT',
+                    unitValue: weight,
+                    onDecreased: () {
+                      setState(() {
+                        weight--;
+                      });
+                    },
+                    onIncreased: () {
+                      setState(() {
+                        weight++;
+                      });
+                    },
+                  ),
+                  BMIParamWidgetContent(
+                    label: 'AGE',
+                    unitValue: age,
+                    onDecreased: () {
+                      setState(() {
+                        age--;
+                      });
+                    },
+                    onIncreased: () {
+                      setState(() {
+                        age++;
+                      });
+                    },
+                  ),
+                ],
               ),
-              femaleCardWidget: GenderCardContent(
-                iconData: FontAwesomeIcons.mars,
-                iconLabel: 'FEMALE',
-              ),
-              onMaleCardPressed: () {},
-              onFemaleCardPressed: () {},
             ),
             Container(
                 color: kBmiButtonColor,

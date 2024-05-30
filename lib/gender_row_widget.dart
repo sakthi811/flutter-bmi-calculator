@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'bmi_card.dart';
 
-class BMIRowWidget extends StatelessWidget {
-  BMIRowWidget(
+class GenderRowWidget extends StatelessWidget {
+  GenderRowWidget(
       {required this.maleCardColour,
       required this.femaleCardColour,
       required this.maleCardWidget,
