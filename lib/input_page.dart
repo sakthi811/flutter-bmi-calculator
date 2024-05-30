@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bmi_calc/bottom_button.dart';
+import 'package:flutter_bmi_calc/calculator_brain.dart';
+import 'package:flutter_bmi_calc/result_page.dart';
 import 'package:flutter_bmi_calc/round_icon_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -139,11 +143,21 @@ class _InputPageState extends State<InputPage> {
                 ],
               ),
             ),
-            Container(
-                color: kBmiButtonColor,
-                margin: const EdgeInsets.only(top: 10.0),
-                width: double.infinity,
-                height: kBottomContainerHeight)
+            BottomButton(
+                buttonLabel: 'CALCULATE BMI',
+                onTap: () {
+                  CalculatorBrain calc =
+                      CalculatorBrain(height: height, weight: weight);
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ResultPage(
+                                bmiResult: calc.calculateBMI(),
+                                interpretation: calc.getInterpretation(),
+                                resultText: calc.getResult(),
+                              )));
+                })
           ],
         ));
   }
