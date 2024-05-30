@@ -5,11 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'bmi_card.dart';
 import 'bmi_card_content.dart';
 import 'bmi_row_widget.dart';
-
-const bottomContainerHeight = 80.0;
-const activeCardColor = Color(0xff1d1e33);
-const inactiveCardColor = Color(0xff111328);
-const bmiButtonColor = Color(0xffeb1555);
+import 'constants.dart';
 
 enum Gender { male, female }
 
@@ -21,9 +17,8 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
-  Color maleCardColor = inactiveCardColor;
-  Color femaleCardColor = inactiveCardColor;
-
+  Gender selectedGender = Gender.male;
+  int height = 180;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,50 +26,88 @@ class _InputPageState extends State<InputPage> {
           title: const Text('BMI Calculator'),
         ),
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             BMIRowWidget(
-              maleCardColour: maleCardColor,
-              femaleCardColour: femaleCardColor,
-              maleCardWidget: BMICardContent(
+              maleCardColour: selectedGender == Gender.male
+                  ? kActiveCardColor
+                  : kInactiveCardColor,
+              femaleCardColour: selectedGender == Gender.female
+                  ? kActiveCardColor
+                  : kInactiveCardColor,
+              maleCardWidget: GenderCardContent(
                 iconData: FontAwesomeIcons.mars,
                 iconLabel: 'MALE',
               ),
-              femaleCardWidget: BMICardContent(
+              femaleCardWidget: GenderCardContent(
                 iconData: FontAwesomeIcons.venus,
                 iconLabel: 'FEMALE',
               ),
               onMaleCardPressed: () {
                 setState(() {
-                  updateColour(Gender.male);
+                  selectedGender = Gender.male;
                 });
               },
               onFemaleCardPressed: () {
                 setState(() {
-                  updateColour(Gender.female);
+                  selectedGender = Gender.female;
                 });
               },
             ),
             Expanded(
-                child: GestureDetector(
-              onTap: () {
-                print('Center widget was pressed');
-              },
-              child: BMICard(
-                colour: activeCardColor,
-                cardChild: BMICardContent(
-                  iconData: FontAwesomeIcons.mars,
-                  iconLabel: 'MALE',
-                ),
+                child: BMICard(
+              colour: kActiveCardColor,
+              cardChild: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('HEIGHT'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: <Widget>[
+                      Text(
+                        height.toString(),
+                        style: kHeightLabelTextStyle,
+                      ),
+                      Text(
+                        'cm',
+                        style: kLabelTextStyle,
+                      )
+                    ],
+                  ),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: Colors.white,
+                        inactiveTrackColor: Colors.grey,
+                        overlayColor: kSliderOverlayColor,
+                        thumbColor: kBmiButtonColor,
+                        thumbShape:
+                            RoundSliderThumbShape(enabledThumbRadius: 15.0),
+                        overlayShape:
+                            RoundSliderOverlayShape(overlayRadius: 30.0)),
+                    child: Slider(
+                      value: height.toDouble(),
+                      min: 120.0,
+                      max: 220.0,
+                      onChanged: (double newValue) {
+                        setState(() {
+                          height = newValue.round();
+                        });
+                      },
+                    ),
+                  )
+                ],
               ),
             )),
             BMIRowWidget(
-              maleCardColour: inactiveCardColor,
-              femaleCardColour: inactiveCardColor,
-              maleCardWidget: BMICardContent(
+              maleCardColour: kInactiveCardColor,
+              femaleCardColour: kInactiveCardColor,
+              maleCardWidget: GenderCardContent(
                 iconData: FontAwesomeIcons.mars,
                 iconLabel: 'MALE',
               ),
-              femaleCardWidget: BMICardContent(
+              femaleCardWidget: GenderCardContent(
                 iconData: FontAwesomeIcons.mars,
                 iconLabel: 'FEMALE',
               ),
@@ -82,27 +115,11 @@ class _InputPageState extends State<InputPage> {
               onFemaleCardPressed: () {},
             ),
             Container(
-                color: bmiButtonColor,
+                color: kBmiButtonColor,
                 margin: const EdgeInsets.only(top: 10.0),
                 width: double.infinity,
-                height: bottomContainerHeight)
+                height: kBottomContainerHeight)
           ],
         ));
-  }
-
-  void updateColour(Gender gender) {
-    if (gender == Gender.male) {
-      if (maleCardColor == inactiveCardColor) {
-        maleCardColor = activeCardColor;
-      } else {
-        maleCardColor == inactiveCardColor;
-      }
-    } else if (gender == Gender.female) {
-      if (femaleCardColor == inactiveCardColor) {
-        femaleCardColor = activeCardColor;
-      } else {
-        femaleCardColor == inactiveCardColor;
-      }
-    }
   }
 }

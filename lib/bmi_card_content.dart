@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
+import 'constants.dart';
 
-const bmiCardContentColor = Color(0xff8d8e98);
-const TextStyle textStyle =
-    TextStyle(fontSize: 18.0, color: bmiCardContentColor);
-
-class BMICardContent extends StatelessWidget {
-  BMICardContent({required this.iconData, required this.iconLabel});
+class GenderCardContent extends StatelessWidget {
+  GenderCardContent({required this.iconData, required this.iconLabel});
 
   final IconData iconData;
   final String iconLabel;
@@ -25,7 +22,7 @@ class BMICardContent extends StatelessWidget {
           ),
           Text(
             iconLabel,
-            style: textStyle,
+            style: kLabelTextStyle,
           )
         ],
       ),
